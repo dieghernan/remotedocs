@@ -79,7 +79,7 @@ extract_repo_database <- function(user, n_repos = 100) {
 
   message("Added packages: ", paste0(flat$name, collapse = ", "))
 
-  return(invisible(flat))
+  return(paste(flat$name, collapse = ","))
 }
 
 
