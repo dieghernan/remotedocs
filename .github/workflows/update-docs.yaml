@@ -1,4 +1,5 @@
 on:
+  push:
   workflow_dispatch:
 
 name: update-docs
@@ -22,12 +23,14 @@ jobs:
       - name: Update db
         id: dbupdate
         run: |
-          echo "::set-output name=update::$(Rscript -e 'cat(remotedocs::extract_repo_database("ropensci", 5))')"
+          echo "::set-output name=packs::$(Rscript -e 'cat(remotedocs::extract_repo_database("ropensci", 5)$packs)')"
+          echo "::set-output name=update::$(Rscript -e 'cat(remotedocs::extract_repo_database("ropensci", 5)$update)')"
           
       - uses: r-lib/actions/setup-r-dependencies@v1
         name: New dependencies
+        if: steps.dbupdate.outputs.packs == TRUE
         with:
-          extra-packages: ${{ steps.dbupdate.outputs.update }}
+          extra-packages: ${{ steps.dbupdate.outputs.packs }}
           needs: website
 
           
