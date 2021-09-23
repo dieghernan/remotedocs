@@ -17,19 +17,12 @@ jobs:
         with:
           use-public-rspm: true
 
-      # This is needed for workflows running on
-      # ubuntu-20.04 or later
-      - name: Install V8
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get install -y libv8-dev
-
       - uses: r-lib/actions/setup-r-dependencies@v1
 
       - name: Update db
         id: dbupdate
         run: |
-          echo "::set-output name=update::$(Rscript -e 'cat(remotedocs::extract_repo_database("ropensci", 5)'))"
+          echo "::set-output name=update::$(Rscript -e 'cat(remotedocs::extract_repo_database("ropensci", 5))')"
           
       - uses: r-lib/actions/setup-r-dependencies@v1
         name: New dependencies
