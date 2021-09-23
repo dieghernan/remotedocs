@@ -2,10 +2,10 @@ on:
   push:
   workflow_dispatch:
 
-name: update-docs
+name: Updated
 
 jobs:
-  update-docs:
+  update-remotedocs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -23,8 +23,8 @@ jobs:
       - name: Update db
         id: dbupdate
         run: |
-          echo "::set-output name=packs::$(Rscript -e 'cat(remotedocs::extract_repo_database("ropensci", 5)$packs)')"
-          echo "::set-output name=update::$(Rscript -e 'cat(remotedocs::extract_repo_database("ropensci", 5)$update)')"
+          echo "::set-output name=packs::$(Rscript -e 'cat(remotedocs::extract_repo_database("ropengov", 2)$packs)')"
+          echo "::set-output name=update::$(Rscript -e 'cat(remotedocs::extract_repo_database("ropengov", 2)$update)')"
           
       - uses: r-lib/actions/setup-r-dependencies@v1
         if: steps.dbupdate.outputs.update == 'TRUE' 
@@ -33,7 +33,14 @@ jobs:
           extra-packages: ${{ steps.dbupdate.outputs.packs }}
           needs: website
 
-          
+      - name: Commit results
+        run: |
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git add -A
+          git commit -m 'Update docs with pkgdev' || echo "No changes to commit"
+          git push origin || echo "No changes to commit"
+
           
           
 
