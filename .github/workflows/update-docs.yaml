@@ -27,7 +27,6 @@ jobs:
           echo "::set-output name=update::$(Rscript -e 'cat(remotedocs::extract_repo_database("ropensci", 5)$update)')"
           
       - uses: r-lib/actions/setup-r-dependencies@v1
-        if: steps.dbupdate.outputs.update == "TRUE"
         name: New dependencies
         with:
           extra-packages: ${{ steps.dbupdate.outputs.packs }}
