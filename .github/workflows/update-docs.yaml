@@ -33,8 +33,7 @@ jobs:
           
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
-          extra-packages: ${{ steps.
-dbupdate.outputs.update }}
+          extra-packages: ${{ steps.dbupdate.outputs.update }}
           needs: website
 
           
